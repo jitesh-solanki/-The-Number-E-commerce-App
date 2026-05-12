@@ -1,0 +1,10 @@
+# robots.txt for The Number
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /login/
+Disallow: /register/
+
+Sitemap: https://thenumber.com/sitemap.xml
