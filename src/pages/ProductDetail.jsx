@@ -8,6 +8,7 @@ import { products } from '../data/products';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SkeletonLoader from '../components/SkeletonLoader';
 import ProductReviews from '../components/ProductReviews';
+import ProductQnA from '../components/ProductQnA';
 import { FiHeart, FiShoppingCart, FiStar, FiTruck, FiRefreshCw, FiShield, FiShare2, FiMinus, FiPlus } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
@@ -356,6 +357,11 @@ const ProductDetail = () => {
         {/* Reviews Section */}
         <div className="mt-8">
           <ProductReviews productId={product.id} productName={product.name} />
+        </div>
+
+        {/* Q&A Section - ADDED HERE */}
+        <div className="mt-8">
+          <ProductQnA productId={product.id} productName={product.name} />
         </div>
       </div>
     </div>

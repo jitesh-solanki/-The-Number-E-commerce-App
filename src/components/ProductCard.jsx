@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { FiHeart, FiShoppingCart, FiStar, FiEye } from 'react-icons/fi';
 
-const ProductCard = ({ product }) => {
+const ProductCard = memo(({ product }) => {
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist } = useWishlist();
 
@@ -16,6 +16,40 @@ const ProductCard = ({ product }) => {
 
   // Fallback image URL (reliable placeholder service)
   const fallbackImage = 'https://placehold.co/500x500/e2e8f0/1e293b?text=No+Image';
+
+  // Memoized discount calculation
+  const discountPercent = React.useMemo(() => {
+    if (product.originalPrice) {
+      return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+    }
+    return 0;
+  }, [product.originalPrice, product.price]);
+
+  // Memoized rating stars to prevent re-renders
+  const ratingStars = React.useMemo(() => {
+    return [...Array(5)].map((_, i) => (
+      <FiStar
+        key={i}
+        className={`text-sm ${
+          i < Math.floor(product.rating) 
+            ? 'text-yellow-400 fill-current' 
+            : 'text-gray-300 dark:text-gray-600'
+        }`}
+      />
+    ));
+  }, [product.rating]);
+
+  // Handle add to cart with proper error handling
+  const handleAddToCart = React.useCallback(() => {
+    if (product.inStock) {
+      addToCart(product);
+    }
+  }, [addToCart, product]);
+
+  // Handle add to wishlist
+  const handleAddToWishlist = React.useCallback(() => {
+    addToWishlist(product);
+  }, [addToWishlist, product]);
 
   return (
     <motion.div
@@ -31,6 +65,7 @@ const ProductCard = ({ product }) => {
           <img
             src={product.image}
             alt={product.name}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             onError={(e) => {
               e.target.src = fallbackImage;
@@ -38,9 +73,9 @@ const ProductCard = ({ product }) => {
           />
         </Link>
         
-        {product.originalPrice && (
+        {product.originalPrice && discountPercent > 0 && (
           <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg z-10">
-            -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+            -{discountPercent}%
           </div>
         )}
         
@@ -55,24 +90,26 @@ const ProductCard = ({ product }) => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => addToCart(product)}
+            onClick={handleAddToCart}
             className="bg-white text-indigo-600 p-3 rounded-full hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-600 hover:text-white transition-all duration-300 shadow-lg"
+            aria-label="Add to cart"
           >
             <FiShoppingCart className="text-xl" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => addToWishlist(product)}
+            onClick={handleAddToWishlist}
             className={`p-3 rounded-full transition-all duration-300 shadow-lg ${
               isInWishlist(product.id) 
                 ? 'bg-red-500 text-white' 
                 : 'bg-white text-gray-700 hover:bg-red-500 hover:text-white'
             }`}
+            aria-label="Add to wishlist"
           >
             <FiHeart className={`text-xl ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
           </motion.button>
-          <Link to={`/product/${product.id}`}>
+          <Link to={`/product/${product.id}`} aria-label="View product details">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -86,16 +123,7 @@ const ProductCard = ({ product }) => {
       
       <div className="p-5">
         <div className="flex items-center gap-1 mb-2">
-          {[...Array(5)].map((_, i) => (
-            <FiStar
-              key={i}
-              className={`text-sm ${
-                i < Math.floor(product.rating) 
-                  ? 'text-yellow-400 fill-current' 
-                  : 'text-gray-300 dark:text-gray-600'
-              }`}
-            />
-          ))}
+          {ratingStars}
           <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">({product.reviews})</span>
         </div>
         
@@ -122,9 +150,10 @@ const ProductCard = ({ product }) => {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => addToCart(product)}
+          onClick={handleAddToCart}
           disabled={!product.inStock}
           className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 text-sm hover:shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          aria-label="Add to cart"
         >
           <FiShoppingCart />
           {product.inStock ? 'Add to Cart' : 'Out of Stock'}
@@ -132,6 +161,9 @@ const ProductCard = ({ product }) => {
       </div>
     </motion.div>
   );
-};
+});
+
+// Add display name for debugging
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;

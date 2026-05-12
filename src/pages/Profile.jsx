@@ -1,24 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiPhone, FiMapPin, FiPackage, FiShoppingBag, FiHeart, FiLogOut, FiEdit2, FiCheck } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiUser, FiMail, FiPhone, FiMapPin, FiPackage, FiShoppingBag, FiHeart, FiLogOut, FiEdit2, FiCheck, FiLock, FiX, FiClock, FiTruck, FiCheckCircle, FiDownload } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { generateInvoice } from '../utils/invoice';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, changePassword } = useAuth();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
     phone: '',
     address: ''
   });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
   const [orders, setOrders] = useState([]);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Format price in Indian Rupees
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN').format(price);
+  };
+
+  // Get status icon
+  const getStatusIcon = (status) => {
+    switch(status) {
+      case 'Pending': return <FiClock className="text-yellow-500" size={12} />;
+      case 'Processing': return <FiPackage className="text-blue-500" size={12} />;
+      case 'Shipped': return <FiTruck className="text-purple-500" size={12} />;
+      case 'Delivered': return <FiCheckCircle className="text-green-500" size={12} />;
+      default: return <FiPackage size={12} />;
+    }
+  };
+
+  const handleDownloadInvoice = async (order) => {
+    setIsDownloading(true);
+    await generateInvoice(order, user);
+    setIsDownloading(false);
   };
 
   useEffect(() => {
@@ -64,7 +95,49 @@ const Profile = () => {
     const updatedUser = { ...profileData, role: user?.role };
     localStorage.setItem('user', JSON.stringify(updatedUser));
     setIsEditing(false);
-    // Show success message (can add toast later)
+    toast.success('Profile updated successfully!');
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setIsChangingPassword(true);
+    
+    const success = await changePassword(
+      passwordData.currentPassword,
+      passwordData.newPassword,
+      passwordData.confirmPassword
+    );
+    
+    if (success) {
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      setIsPasswordModalOpen(false);
+    }
+    
+    setIsChangingPassword(false);
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!resetEmail.trim()) {
+      toast.error('Please enter your email');
+      return;
+    }
+    
+    setIsResetting(true);
+    
+    setTimeout(() => {
+      toast.success(`Password reset link sent to ${resetEmail}`);
+      setResetEmail('');
+      setIsForgotModalOpen(false);
+      setTimeout(() => {
+        logout();
+        navigate('/login');
+      }, 1500);
+    }, 1500);
   };
 
   const getStatusColor = (status) => {
@@ -145,6 +218,14 @@ const Profile = () => {
                 </div>
 
                 <div className="border-t dark:border-gray-700 my-6"></div>
+
+                {/* Change Password Button */}
+                <button
+                  onClick={() => setIsPasswordModalOpen(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl font-semibold hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-all mb-4"
+                >
+                  <FiLock /> Change Password
+                </button>
 
                 <div className="space-y-2">
                   <Link to="/wishlist" className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -254,7 +335,7 @@ const Profile = () => {
                 </div>
               </motion.div>
 
-              {/* Recent Orders Section */}
+              {/* Recent Orders Section with Invoice Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -284,7 +365,8 @@ const Profile = () => {
                             <p className="text-sm text-gray-500">{order.date}</p>
                           </div>
                           <div>
-                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
+                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
+                              {getStatusIcon(order.status)}
                               {order.status}
                             </span>
                           </div>
@@ -303,6 +385,15 @@ const Profile = () => {
                           {order.items?.length > 3 && (
                             <span className="text-sm text-gray-500">+{order.items.length - 3} more</span>
                           )}
+                        </div>
+                        <div className="mt-3 flex justify-end">
+                          <button
+                            onClick={() => handleDownloadInvoice(order)}
+                            disabled={isDownloading}
+                            className="px-3 py-1 bg-green-500 text-white rounded-lg text-sm font-semibold flex items-center gap-1 hover:bg-green-600 transition disabled:opacity-50"
+                          >
+                            <FiDownload size={14} /> {isDownloading ? 'Generating...' : 'Download Invoice'}
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -325,10 +416,197 @@ const Profile = () => {
                   <p className="text-2xl font-bold">{wishlistCount}</p>
                 </div>
               </div>
+
+              {/* Quick Link to Orders Page */}
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-2xl p-6 text-center">
+                <p className="text-gray-700 dark:text-gray-300 mb-3">Want to manage, cancel, or download invoice for your orders?</p>
+                <Link to="/orders" className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">
+                  <FiPackage /> View All Orders
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      <AnimatePresence>
+        {isPasswordModalOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+              onClick={() => setIsPasswordModalOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full shadow-2xl">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                      Change Password
+                    </h2>
+                    <button
+                      onClick={() => setIsPasswordModalOpen(false)}
+                      className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                    >
+                      <FiX className="text-xl" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handlePasswordChange} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 dark:text-white">Current Password</label>
+                      <input
+                        type="password"
+                        value={passwordData.currentPassword}
+                        onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 dark:text-white">New Password</label>
+                      <input
+                        type="password"
+                        value={passwordData.newPassword}
+                        onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 dark:text-white">Confirm New Password</label>
+                      <input
+                        type="password"
+                        value={passwordData.confirmPassword}
+                        onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                        required
+                      />
+                    </div>
+
+                    <div className="text-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsPasswordModalOpen(false);
+                          setIsForgotModalOpen(true);
+                        }}
+                        className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
+                      >
+                        Forgot current password?
+                      </button>
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <button
+                        type="submit"
+                        disabled={isChangingPassword}
+                        className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                      >
+                        {isChangingPassword ? 'Changing...' : 'Change Password'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsPasswordModalOpen(false)}
+                        className="flex-1 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Forgot Password Modal */}
+      <AnimatePresence>
+        {isForgotModalOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+              onClick={() => setIsForgotModalOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full shadow-2xl">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                      Reset Password
+                    </h2>
+                    <button
+                      onClick={() => setIsForgotModalOpen(false)}
+                      className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition"
+                    >
+                      <FiX className="text-xl" />
+                    </button>
+                  </div>
+
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    Enter your email address and we'll send you a link to reset your password. You will be logged out.
+                  </p>
+
+                  <form onSubmit={handleForgotPassword} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 dark:text-white">Email Address</label>
+                      <div className="relative">
+                        <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                          type="email"
+                          value={resetEmail}
+                          onChange={(e) => setResetEmail(e.target.value)}
+                          className="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                          placeholder={user?.email || 'your@email.com'}
+                          defaultValue={user?.email || ''}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4">
+                      <button
+                        type="submit"
+                        disabled={isResetting}
+                        className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                      >
+                        {isResetting ? 'Sending...' : 'Send Reset Link'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsForgotModalOpen(false)}
+                        className="flex-1 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

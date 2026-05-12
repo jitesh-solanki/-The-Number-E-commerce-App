@@ -83,6 +83,26 @@ export const AuthProvider = ({ children }) => {
     toast.success('Logged out successfully');
   };
 
+  // Change password functionality
+  const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+    // Check if new password matches confirm password
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return false;
+    }
+    
+    // Check password length
+    if (newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return false;
+    }
+    
+    // For demo, just show success
+    // In real app, you'd verify current password with backend
+    toast.success('Password changed successfully!');
+    return true;
+  };
+
   // Check if user is admin
   const isAdmin = user?.role === 'super_admin' || user?.role === 'admin';
 
@@ -93,7 +113,8 @@ export const AuthProvider = ({ children }) => {
       isAdmin,
       login,
       logout,
-      loading
+      loading,
+      changePassword
     }}>
       {children}
     </AuthContext.Provider>

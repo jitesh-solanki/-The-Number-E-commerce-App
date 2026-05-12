@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiStar, FiThumbsUp, FiUser, FiClock } from 'react-icons/fi';
 import ReviewForm from './ReviewForm';
 import { useAuth } from '../context/AuthContext';
 import { useReviews } from '../context/ReviewContext';
 
-const ProductReviews = ({ productId, productName }) => {
+const ProductReviews = memo(({ productId, productName }) => {
   const { isAuthenticated } = useAuth();
   const { getProductReviews, getAverageRating, markHelpful, deleteReview } = useReviews();
   const [showForm, setShowForm] = useState(false);
@@ -14,11 +14,27 @@ const ProductReviews = ({ productId, productName }) => {
   const productReviews = getProductReviews(productId);
   const averageRating = getAverageRating(productId);
 
-  const filteredReviews = filter === 'all' 
-    ? productReviews 
-    : productReviews.filter(review => review.rating === parseInt(filter));
+  // Memoize filtered reviews to prevent recalculation on every render
+  const filteredReviews = useMemo(() => {
+    if (filter === 'all') {
+      return productReviews;
+    }
+    return productReviews.filter(review => review.rating === parseInt(filter));
+  }, [productReviews, filter]);
 
-  const getRatingStars = (rating) => {
+  // Memoize rating counts for filter buttons
+  const ratingCounts = useMemo(() => {
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    productReviews.forEach(review => {
+      if (counts[review.rating] !== undefined) {
+        counts[review.rating]++;
+      }
+    });
+    return counts;
+  }, [productReviews]);
+
+  // Memoize rating stars component
+  const getRatingStars = useCallback((rating) => {
     return (
       <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
@@ -30,7 +46,37 @@ const ProductReviews = ({ productId, productName }) => {
         ))}
       </div>
     );
-  };
+  }, []);
+
+  // Handle mark helpful with useCallback
+  const handleMarkHelpful = useCallback((reviewId) => {
+    markHelpful(productId, reviewId);
+  }, [markHelpful, productId]);
+
+  // Toggle form visibility
+  const toggleForm = useCallback(() => {
+    setShowForm(prev => !prev);
+  }, []);
+
+  // Set filter value
+  const handleFilterChange = useCallback((newFilter) => {
+    setFilter(newFilter);
+  }, []);
+
+  // Close form
+  const handleCloseForm = useCallback(() => {
+    setShowForm(false);
+  }, []);
+
+  // Memoize average rating display
+  const averageRatingDisplay = useMemo(() => {
+    return averageRating.toFixed(1);
+  }, [averageRating]);
+
+  // Memoize rounded average for stars
+  const roundedAverage = useMemo(() => {
+    return Math.round(averageRating);
+  }, [averageRating]);
 
   return (
     <div className="mt-12">
@@ -40,9 +86,9 @@ const ProductReviews = ({ productId, productName }) => {
           <h3 className="text-2xl font-bold dark:text-white">Customer Reviews</h3>
           <div className="flex items-center gap-3 mt-2">
             <div className="flex items-center gap-1">
-              {getRatingStars(Math.round(averageRating))}
+              {getRatingStars(roundedAverage)}
             </div>
-            <span className="text-2xl font-bold text-indigo-600">{averageRating.toFixed(1)}</span>
+            <span className="text-2xl font-bold text-indigo-600">{averageRatingDisplay}</span>
             <span className="text-gray-500">out of 5</span>
             <span className="text-gray-400">|</span>
             <span className="text-gray-600 dark:text-gray-400">{productReviews.length} reviews</span>
@@ -50,7 +96,7 @@ const ProductReviews = ({ productId, productName }) => {
         </div>
         {isAuthenticated && (
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={toggleForm}
             className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all cursor-pointer"
           >
             {showForm ? 'Cancel' : 'Write a Review'}
@@ -70,7 +116,7 @@ const ProductReviews = ({ productId, productName }) => {
             <ReviewForm
               productId={productId}
               productName={productName}
-              onClose={() => setShowForm(false)}
+              onClose={handleCloseForm}
             />
           </motion.div>
         )}
@@ -80,7 +126,7 @@ const ProductReviews = ({ productId, productName }) => {
       {productReviews.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-6">
           <button
-            onClick={() => setFilter('all')}
+            onClick={() => handleFilterChange('all')}
             className={`px-3 py-1 rounded-full text-sm transition-all cursor-pointer ${
               filter === 'all'
                 ? 'bg-indigo-600 text-white'
@@ -90,12 +136,12 @@ const ProductReviews = ({ productId, productName }) => {
             All ({productReviews.length})
           </button>
           {[5, 4, 3, 2, 1].map(rating => {
-            const count = productReviews.filter(r => r.rating === rating).length;
+            const count = ratingCounts[rating];
             if (count === 0) return null;
             return (
               <button
                 key={rating}
-                onClick={() => setFilter(rating.toString())}
+                onClick={() => handleFilterChange(rating.toString())}
                 className={`px-3 py-1 rounded-full text-sm transition-all flex items-center gap-1 cursor-pointer ${
                   filter === rating.toString()
                     ? 'bg-indigo-600 text-white'
@@ -144,7 +190,7 @@ const ProductReviews = ({ productId, productName }) => {
               </div>
               <p className="text-gray-700 dark:text-gray-300 mb-3">{review.comment}</p>
               <button
-                onClick={() => markHelpful(productId, review.id)}
+                onClick={() => handleMarkHelpful(review.id)}
                 className="flex items-center gap-1 text-sm text-gray-500 hover:text-indigo-600 transition-colors cursor-pointer"
               >
                 <FiThumbsUp /> Helpful ({review.helpful || 0})
@@ -155,6 +201,8 @@ const ProductReviews = ({ productId, productName }) => {
       )}
     </div>
   );
-};
+});
+
+ProductReviews.displayName = 'ProductReviews';
 
 export default ProductReviews;
