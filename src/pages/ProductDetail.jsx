@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import { products } from '../data/products';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SkeletonLoader from '../components/SkeletonLoader';
@@ -19,6 +20,12 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist } = useWishlist();
+  const { addToRecentlyViewed } = useRecentlyViewed();
+
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
 
   // Fallback image URLs (reliable placeholder service)
   const fallbackImage = 'https://placehold.co/500x500/e2e8f0/1e293b?text=No+Image';
@@ -35,6 +42,13 @@ const ProductDetail = () => {
     
     return () => clearTimeout(timer);
   }, [id]);
+
+  // Add to recently viewed when product loads - FIXED: removed addToRecentlyViewed from dependencies
+  useEffect(() => {
+    if (product) {
+      addToRecentlyViewed(product);
+    }
+  }, [product]); // <-- FIXED: removed addToRecentlyViewed from dependencies
 
   const handleShare = async () => {
     if (!product) return;
@@ -205,12 +219,12 @@ const ProductDetail = () => {
 
               <div className="mb-6">
                 {product.originalPrice && (
-                  <span className="text-gray-400 line-through text-2xl mr-3">${product.originalPrice}</span>
+                  <span className="text-gray-400 line-through text-2xl mr-3">₹{formatPrice(product.originalPrice)}</span>
                 )}
-                <span className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">${product.price}</span>
+                <span className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">₹{formatPrice(product.price)}</span>
                 {product.originalPrice && (
                   <span className="ml-3 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-semibold">
-                    Save ${(product.originalPrice - product.price).toFixed(2)}
+                    Save ₹{formatPrice(product.originalPrice - product.price)}
                   </span>
                 )}
               </div>
@@ -317,7 +331,7 @@ const ProductDetail = () => {
                   <FiTruck className="text-2xl text-indigo-600 dark:text-indigo-400" />
                   <div>
                     <p className="font-semibold dark:text-white">Free Shipping</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">On orders over $50</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">On orders over ₹5000</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
@@ -339,7 +353,7 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Reviews Section - ADDED HERE */}
+        {/* Reviews Section */}
         <div className="mt-8">
           <ProductReviews productId={product.id} productName={product.name} />
         </div>

@@ -23,6 +23,11 @@ const AdminDashboard = () => {
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
 
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
+
   // Load all data
   useEffect(() => {
     loadDashboardData();
@@ -127,7 +132,7 @@ const AdminDashboard = () => {
     { title: 'Total Products', value: stats.totalProducts, icon: FiPackage, color: 'from-indigo-500 to-indigo-600', growth: stats.productGrowth },
     { title: 'Total Orders', value: stats.totalOrders, icon: FiShoppingBag, color: 'from-green-500 to-green-600', growth: stats.orderGrowth },
     { title: 'Total Users', value: stats.totalUsers, icon: FiUsers, color: 'from-purple-500 to-purple-600', growth: stats.userGrowth },
-    { title: 'Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, icon: FiDollarSign, color: 'from-yellow-500 to-yellow-600', growth: stats.revenueGrowth },
+    { title: 'Revenue', value: `₹${formatPrice(stats.totalRevenue)}`, icon: FiDollarSign, color: 'from-yellow-500 to-yellow-600', growth: stats.revenueGrowth },
   ];
 
   return (
@@ -203,12 +208,12 @@ const AdminDashboard = () => {
                     <tr key={order.id} className="border-b dark:border-gray-700 last:border-0">
                       <td className="py-2 font-semibold dark:text-white text-sm">#{order.id}</td>
                       <td className="py-2 dark:text-gray-300 text-sm">{order.customerName || order.customer}</td>
-                      <td className="py-2 text-indigo-600 font-semibold text-sm">${order.total.toFixed(2)}</td>
+                      <td className="py-2 text-indigo-600 font-semibold text-sm">₹{formatPrice(order.total)}</td>
                       <td className="py-2">
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusClass(order.status)}`}>
                           {order.status}
                         </span>
-                      </td>
+                       </td>
                     </tr>
                   ))}
                 </tbody>
@@ -252,13 +257,13 @@ const AdminDashboard = () => {
                       alt={product.name} 
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/500x500?text=No+Image';
+                        e.target.src = 'https://placehold.co/500x500/e2e8f0/1e293b?text=No+Image';
                       }}
                     />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-sm dark:text-white">{product.name}</p>
-                    <p className="text-xs text-indigo-600 font-semibold">${product.price}</p>
+                    <p className="text-xs text-indigo-600 font-semibold">₹{formatPrice(product.price)}</p>
                   </div>
                   <div className="flex items-center gap-1">
                     <FiStar className="text-yellow-400 fill-current" />

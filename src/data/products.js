@@ -3,8 +3,8 @@ export const products = [
   {
     id: 1,
     name: "Premium Cotton T-Shirt",
-    price: 29.99,
-    originalPrice: 49.99,
+    price: 2499,
+    originalPrice: 3999,
     category: "Men",
     subcategory: "Top Wear",
     type: "T-Shirt",
@@ -25,8 +25,8 @@ export const products = [
   {
     id: 2,
     name: "Classic Oxford Shirt",
-    price: 59.99,
-    originalPrice: 89.99,
+    price: 4999,
+    originalPrice: 7499,
     category: "Men",
     subcategory: "Top Wear",
     type: "Shirt",
@@ -47,8 +47,8 @@ export const products = [
   {
     id: 3,
     name: "Slim Fit Jeans",
-    price: 79.99,
-    originalPrice: 119.99,
+    price: 6499,
+    originalPrice: 9999,
     category: "Men",
     subcategory: "Bottom Wear",
     type: "Jeans",
@@ -69,8 +69,8 @@ export const products = [
   {
     id: 4,
     name: "Chino Pants",
-    price: 69.99,
-    originalPrice: 99.99,
+    price: 5499,
+    originalPrice: 7999,
     category: "Men",
     subcategory: "Bottom Wear",
     type: "Pants",
@@ -89,12 +89,12 @@ export const products = [
     brand: "H&M"
   },
 
-  // WOMEN - TOP WEAR (ALL IMAGES FIXED)
+  // WOMEN - TOP WEAR
   {
     id: 5,
     name: "Floral Print Blouse",
-    price: 49.99,
-    originalPrice: 79.99,
+    price: 3999,
+    originalPrice: 6499,
     category: "Women",
     subcategory: "Top Wear",
     type: "Blouse",
@@ -115,8 +115,8 @@ export const products = [
   {
     id: 6,
     name: "Cashmere Sweater",
-    price: 129.99,
-    originalPrice: 199.99,
+    price: 10999,
+    originalPrice: 16999,
     category: "Women",
     subcategory: "Top Wear",
     type: "Sweater",
@@ -137,8 +137,8 @@ export const products = [
   {
     id: 7,
     name: "High-Waist Jeans",
-    price: 89.99,
-    originalPrice: 139.99,
+    price: 7499,
+    originalPrice: 10999,
     category: "Women",
     subcategory: "Bottom Wear",
     type: "Jeans",
@@ -159,8 +159,8 @@ export const products = [
   {
     id: 8,
     name: "Pleated Skirt",
-    price: 59.99,
-    originalPrice: 89.99,
+    price: 4499,
+    originalPrice: 6999,
     category: "Women",
     subcategory: "Bottom Wear",
     type: "Skirt",
@@ -183,8 +183,8 @@ export const products = [
   {
     id: 9,
     name: "Wireless Headphones",
-    price: 99.99,
-    originalPrice: 149.99,
+    price: 7999,
+    originalPrice: 11999,
     category: "Electronics",
     subcategory: "Audio",
     type: "Headphones",
@@ -204,8 +204,8 @@ export const products = [
   {
     id: 10,
     name: "Smart Watch",
-    price: 249.99,
-    originalPrice: 299.99,
+    price: 19999,
+    originalPrice: 24999,
     category: "Electronics",
     subcategory: "Wearables",
     type: "Smart Watch",
@@ -225,8 +225,8 @@ export const products = [
   {
     id: 11,
     name: "Laptop",
-    price: 999.99,
-    originalPrice: 1299.99,
+    price: 79999,
+    originalPrice: 99999,
     category: "Electronics",
     subcategory: "Computers",
     type: "Laptop",
@@ -246,8 +246,8 @@ export const products = [
   {
     id: 12,
     name: "Wireless Earbuds",
-    price: 79.99,
-    originalPrice: 129.99,
+    price: 5999,
+    originalPrice: 9999,
     category: "Electronics",
     subcategory: "Audio",
     type: "Earbuds",
@@ -269,8 +269,8 @@ export const products = [
   {
     id: 13,
     name: "Running Shoes",
-    price: 79.99,
-    originalPrice: 119.99,
+    price: 6499,
+    originalPrice: 9999,
     category: "Footwear",
     subcategory: "Sports",
     type: "Running Shoes",
@@ -290,8 +290,8 @@ export const products = [
   {
     id: 14,
     name: "Casual Sneakers",
-    price: 69.99,
-    originalPrice: 99.99,
+    price: 5499,
+    originalPrice: 7999,
     category: "Footwear",
     subcategory: "Casual",
     type: "Sneakers",
@@ -313,8 +313,8 @@ export const products = [
   {
     id: 15,
     name: "Leather Backpack",
-    price: 89.99,
-    originalPrice: 129.99,
+    price: 7499,
+    originalPrice: 10999,
     category: "Accessories",
     subcategory: "Bags",
     type: "Backpack",
@@ -333,8 +333,8 @@ export const products = [
   {
     id: 16,
     name: "Designer Sunglasses",
-    price: 159.99,
-    originalPrice: 199.99,
+    price: 12999,
+    originalPrice: 16999,
     category: "Accessories",
     subcategory: "Eyewear",
     type: "Sunglasses",
@@ -353,8 +353,8 @@ export const products = [
   {
     id: 17,
     name: "Leather Wallet",
-    price: 39.99,
-    originalPrice: 59.99,
+    price: 2999,
+    originalPrice: 4999,
     category: "Accessories",
     subcategory: "Wallets",
     type: "Wallet",
@@ -375,8 +375,8 @@ export const products = [
   {
     id: 18,
     name: "Ceramic Coffee Mug",
-    price: 19.99,
-    originalPrice: 29.99,
+    price: 1499,
+    originalPrice: 2499,
     category: "Home & Living",
     subcategory: "Kitchen",
     type: "Mug",
@@ -395,8 +395,8 @@ export const products = [
   {
     id: 19,
     name: "LED Desk Lamp",
-    price: 49.99,
-    originalPrice: 79.99,
+    price: 3999,
+    originalPrice: 6499,
     category: "Home & Living",
     subcategory: "Lighting",
     type: "Lamp",
@@ -415,8 +415,8 @@ export const products = [
   {
     id: 20,
     name: "Throw Pillow Set",
-    price: 34.99,
-    originalPrice: 54.99,
+    price: 2999,
+    originalPrice: 4499,
     category: "Home & Living",
     subcategory: "Decor",
     type: "Pillow",
@@ -431,6 +431,224 @@ export const products = [
     reviews: 89,
     inStock: true,
     brand: "HomeGoods"
+  },
+
+  // NEW PRODUCTS - WINTER COLLECTION 2024
+  {
+    id: 21,
+    name: "Woolen Beanie Hat",
+    price: 1999,
+    originalPrice: 3499,
+    category: "Accessories",
+    subcategory: "Winter Wear",
+    type: "Hat",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1534214526114-0ea4d47d04b2?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1534214526114-0ea4d47d04b2?w=500",
+      "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=500"
+    ],
+    description: "Cozy woolen beanie hat, perfect for cold winter days. One size fits all.",
+    rating: 4.6,
+    reviews: 89,
+    inStock: true,
+    sizes: ["One Size"],
+    colors: ["Black", "Gray", "Navy", "Burgundy"],
+    brand: "North Face"
+  },
+  {
+    id: 22,
+    name: "Leather Gloves",
+    price: 3999,
+    originalPrice: 6499,
+    category: "Accessories",
+    subcategory: "Winter Wear",
+    type: "Gloves",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500",
+      "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500"
+    ],
+    description: "Premium leather gloves with touchscreen compatible fingertips.",
+    rating: 4.7,
+    reviews: 56,
+    inStock: true,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "Brown"],
+    brand: "North Face"
+  },
+  {
+    id: 23,
+    name: "Winter Jacket - Men",
+    price: 14999,
+    originalPrice: 22999,
+    category: "Men",
+    subcategory: "Top Wear",
+    type: "Jacket",
+    gender: "men",
+    image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=500",
+      "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=500"
+    ],
+    description: "Heavy-duty winter jacket with fleece lining. Water-resistant outer shell.",
+    rating: 4.8,
+    reviews: 112,
+    inStock: true,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colors: ["Black", "Navy", "Olive"],
+    brand: "Columbia"
+  },
+  {
+    id: 24,
+    name: "Puffer Jacket - Women",
+    price: 12999,
+    originalPrice: 18999,
+    category: "Women",
+    subcategory: "Top Wear",
+    type: "Jacket",
+    gender: "women",
+    image: "https://images.unsplash.com/photo-1548624313-3e3e2549a3b2?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1548624313-3e3e2549a3b2?w=500",
+      "https://images.unsplash.com/photo-1548624313-3e3e2549a3b2?w=500"
+    ],
+    description: "Lightweight puffer jacket perfect for winter layering.",
+    rating: 4.7,
+    reviews: 98,
+    inStock: true,
+    sizes: ["XS", "S", "M", "L", "XL"],
+    colors: ["Black", "White", "Pink"],
+    brand: "The North Face"
+  },
+  {
+    id: 25,
+    name: "Noise Cancelling Earbuds",
+    price: 8999,
+    originalPrice: 14999,
+    category: "Electronics",
+    subcategory: "Audio",
+    type: "Earbuds",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1606220588913-b3aac0ab81f6?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1606220588913-b3aac0ab81f6?w=500",
+      "https://images.unsplash.com/photo-1606220588913-b3aac0ab81f6?w=500"
+    ],
+    description: "Active noise cancelling earbuds with 40-hour battery life.",
+    rating: 4.9,
+    reviews: 567,
+    inStock: true,
+    specs: ["Active Noise Cancelling", "40hr Battery", "IPX4 Water Resistant"],
+    brand: "Bose"
+  },
+  {
+    id: 26,
+    name: "Gaming Mouse",
+    price: 3499,
+    originalPrice: 5999,
+    category: "Electronics",
+    subcategory: "Computers",
+    type: "Mouse",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1615663245857-ac93cf2f1a6f?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1615663245857-ac93cf2f1a6f?w=500",
+      "https://images.unsplash.com/photo-1615663245857-ac93cf2f1a6f?w=500"
+    ],
+    description: "RGB gaming mouse with 16000 DPI and programmable buttons.",
+    rating: 4.6,
+    reviews: 234,
+    inStock: true,
+    specs: ["16000 DPI", "RGB Lighting", "6 Programmable Buttons"],
+    brand: "Razer"
+  },
+  {
+    id: 27,
+    name: "Mechanical Keyboard",
+    price: 6999,
+    originalPrice: 9999,
+    category: "Electronics",
+    subcategory: "Computers",
+    type: "Keyboard",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500",
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500"
+    ],
+    description: "Mechanical keyboard with blue switches and RGB backlight.",
+    rating: 4.8,
+    reviews: 189,
+    inStock: true,
+    specs: ["Blue Switches", "RGB Backlight", "Full Size"],
+    brand: "Corsair"
+  },
+  {
+    id: 28,
+    name: "Yoga Mat",
+    price: 2499,
+    originalPrice: 3999,
+    category: "Accessories",
+    subcategory: "Fitness",
+    type: "Mat",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=500",
+      "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=500"
+    ],
+    description: "Eco-friendly non-slip yoga mat for all types of exercise.",
+    rating: 4.5,
+    reviews: 456,
+    inStock: true,
+    sizes: ["6mm", "8mm", "10mm"],
+    colors: ["Purple", "Blue", "Black"],
+    brand: "YogaAccessories"
+  },
+  {
+    id: 29,
+    name: "Water Bottle",
+    price: 1299,
+    originalPrice: 2499,
+    category: "Accessories",
+    subcategory: "Fitness",
+    type: "Bottle",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500",
+      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=500"
+    ],
+    description: "Insulated stainless steel water bottle. Keeps drinks cold for 24 hours.",
+    rating: 4.7,
+    reviews: 789,
+    inStock: true,
+    sizes: ["500ml", "750ml", "1L"],
+    colors: ["Black", "White", "Blue", "Pink"],
+    brand: "Hydro Flask"
+  },
+  {
+    id: 30,
+    name: "Smartphone Case",
+    price: 999,
+    originalPrice: 1999,
+    category: "Accessories",
+    subcategory: "Mobile Accessories",
+    type: "Case",
+    gender: "unisex",
+    image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500",
+    images: [
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500",
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500"
+    ],
+    description: "Shockproof smartphone case with raised edges for screen protection.",
+    rating: 4.3,
+    reviews: 1234,
+    inStock: true,
+    colors: ["Black", "Clear", "Blue", "Red"],
+    brand: "Spigen"
   }
 ];
 
@@ -460,7 +678,7 @@ export const categories = [
     icon: "👩",
     slug: "women",
     subcategories: [
-      { name: "Top Wear", types: ["Blouse", "T-Shirt", "Shirt", "Sweater", "Dress"] },
+      { name: "Top Wear", types: ["Blouse", "T-Shirt", "Shirt", "Sweater", "Dress", "Jacket"] },
       { name: "Bottom Wear", types: ["Jeans", "Pants", "Skirt", "Shorts"] },
       { name: "Footwear", types: ["Shoes", "Heels", "Flats", "Boots"] },
       { name: "Accessories", types: ["Handbags", "Jewelry", "Scarves"] }
@@ -474,7 +692,7 @@ export const categories = [
     subcategories: [
       { name: "Audio", types: ["Headphones", "Earbuds", "Speakers"] },
       { name: "Wearables", types: ["Smart Watches", "Fitness Trackers"] },
-      { name: "Computers", types: ["Laptops", "Tablets", "Accessories"] },
+      { name: "Computers", types: ["Laptops", "Keyboards", "Mouse", "Accessories"] },
       { name: "Mobile", types: ["Phones", "Cases", "Chargers"] }
     ]
   },
@@ -497,7 +715,10 @@ export const categories = [
       { name: "Bags", types: ["Backpacks", "Handbags", "Totes"] },
       { name: "Watches", types: ["Analog", "Digital", "Smart"] },
       { name: "Eyewear", types: ["Sunglasses", "Spectacles"] },
-      { name: "Wallets", types: ["Leather", "Slim", "Travel"] }
+      { name: "Wallets", types: ["Leather", "Slim", "Travel"] },
+      { name: "Winter Wear", types: ["Hat", "Gloves", "Scarf"] },
+      { name: "Fitness", types: ["Mat", "Bottle"] },
+      { name: "Mobile Accessories", types: ["Case"] }
     ]
   },
   { 

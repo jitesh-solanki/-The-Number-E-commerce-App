@@ -7,9 +7,14 @@ import { FiMinus, FiPlus, FiTrash2, FiArrowLeft, FiShoppingBag } from 'react-ico
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart, getCartTotal } = useCart();
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  const shipping = subtotal > 5000 ? 0 : 500;
   const tax = subtotal * 0.1;
   const total = subtotal + shipping + tax;
+
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
 
   // Fallback image URL
   const fallbackImage = 'https://placehold.co/500x500/e2e8f0/1e293b?text=No+Image';
@@ -85,7 +90,7 @@ const Cart = () => {
                   <div className="md:col-span-2">
                     <div className="text-center">
                       <span className="md:hidden font-semibold mr-2 block mb-1 text-gray-600 dark:text-gray-400">Price:</span>
-                      <span className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">${item.price}</span>
+                      <span className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">₹{formatPrice(item.price)}</span>
                     </div>
                   </div>
                   
@@ -111,7 +116,7 @@ const Cart = () => {
                     <div className="text-center">
                       <span className="md:hidden font-semibold mr-2 block mb-1 text-gray-600 dark:text-gray-400">Total:</span>
                       <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₹{formatPrice(item.price * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -142,20 +147,20 @@ const Cart = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold">₹{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
-                  <span className="font-semibold">{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                  <span className="font-semibold">{shipping === 0 ? 'Free' : `₹${formatPrice(shipping)}`}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Tax (10%)</span>
-                  <span className="font-semibold">${tax.toFixed(2)}</span>
+                  <span className="font-semibold">₹{formatPrice(tax)}</span>
                 </div>
                 <div className="border-t dark:border-gray-700 pt-3 mt-3">
                   <div className="flex justify-between text-2xl font-bold">
                     <span className="dark:text-white">Total</span>
-                    <span className="text-indigo-600 dark:text-indigo-400">${total.toFixed(2)}</span>
+                    <span className="text-indigo-600 dark:text-indigo-400">₹{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -163,10 +168,10 @@ const Cart = () => {
               {shipping > 0 && (
                 <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-3 mb-4">
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Add ${(50 - subtotal).toFixed(2)} more to get free shipping!
+                    Add ₹{formatPrice(5000 - subtotal)} more to get free shipping!
                   </p>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
-                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all" style={{ width: `${Math.min((subtotal / 50) * 100, 100)}%` }}></div>
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all" style={{ width: `${Math.min((subtotal / 5000) * 100, 100)}%` }}></div>
                   </div>
                 </div>
               )}
@@ -178,7 +183,7 @@ const Cart = () => {
               </Link>
               
               <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Secure payment powered by ShopZilla</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Secure payment powered by The Number</p>
               </div>
             </motion.div>
           </div>

@@ -16,6 +16,11 @@ const Profile = () => {
   const [orders, setOrders] = useState([]);
   const [wishlistCount, setWishlistCount] = useState(0);
 
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
+
   useEffect(() => {
     // Load user data
     if (user) {
@@ -284,7 +289,7 @@ const Profile = () => {
                             </span>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold text-indigo-600">${order.total.toFixed(2)}</p>
+                            <p className="font-bold text-indigo-600">₹{formatPrice(order.total)}</p>
                             <p className="text-xs text-gray-500">{order.items?.length || 0} items</p>
                           </div>
                         </div>
@@ -313,7 +318,7 @@ const Profile = () => {
                 </div>
                 <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 text-white">
                   <p className="text-sm opacity-90">Total Spent</p>
-                  <p className="text-2xl font-bold">${orders.reduce((sum, o) => sum + o.total, 0).toFixed(2)}</p>
+                  <p className="text-2xl font-bold">₹{formatPrice(orders.reduce((sum, o) => sum + o.total, 0))}</p>
                 </div>
                 <div className="bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl p-4 text-white">
                   <p className="text-sm opacity-90">Wishlist Items</p>

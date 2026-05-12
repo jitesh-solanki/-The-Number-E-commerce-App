@@ -8,8 +8,13 @@ import { StoreProvider } from './context/StoreContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { ReviewProvider } from './context/ReviewContext';
+import { RecentlyViewedProvider } from './context/RecentlyViewedContext';
+import { SubscriptionProvider } from './context/SubscriptionContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
+import Breadcrumbs from './components/common/Breadcrumbs';
+import RecentlyViewed from './components/RecentlyViewed';
 import AdminRoute from './components/AdminRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
@@ -24,12 +29,14 @@ import Privacy from './pages/Privacy';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import OrderTracking from './pages/OrderTracking';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 import AdminSettings from './pages/AdminSettings';
+import AdminSubscribers from './pages/AdminSubscribers';
 
 // This component has access to theme because it's inside ThemeProvider
 const AppContent = () => {
@@ -39,6 +46,7 @@ const AppContent = () => {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       <Navbar />
       <main className="flex-grow">
+        <Breadcrumbs />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
@@ -53,6 +61,7 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/track-order" element={<OrderTracking />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -81,9 +90,16 @@ const AppContent = () => {
               <AdminSettings />
             </AdminRoute>
           } />
+          <Route path="/admin/subscribers" element={
+            <AdminRoute>
+              <AdminSubscribers />
+            </AdminRoute>
+          } />
         </Routes>
       </main>
+      <RecentlyViewed />
       <Footer />
+      <BackToTop />
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -114,11 +130,15 @@ function App() {
               <StoreProvider>
                 <CartProvider>
                   <ReviewProvider>
-                    <WishlistProvider>
-                      <ErrorBoundary>
-                        <AppContent />
-                      </ErrorBoundary>
-                    </WishlistProvider>
+                    <RecentlyViewedProvider>
+                      <SubscriptionProvider>
+                        <WishlistProvider>
+                          <ErrorBoundary>
+                            <AppContent />
+                          </ErrorBoundary>
+                        </WishlistProvider>
+                      </SubscriptionProvider>
+                    </RecentlyViewedProvider>
                   </ReviewProvider>
                 </CartProvider>
               </StoreProvider>

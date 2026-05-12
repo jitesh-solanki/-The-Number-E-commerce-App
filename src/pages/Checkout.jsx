@@ -20,7 +20,7 @@ const Checkout = () => {
     city: '',
     state: '',
     zipCode: '',
-    country: 'United States',
+    country: 'India',
     cardNumber: '',
     expiry: '',
     cvv: '',
@@ -46,8 +46,13 @@ const Checkout = () => {
     }
   }, [cartItems, navigate]);
 
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
+
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  const shipping = subtotal > 5000 ? 0 : 500;
   const tax = subtotal * 0.1;
   const total = subtotal + shipping + tax;
 
@@ -234,7 +239,7 @@ const Checkout = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 dark:text-gray-300 mb-2">ZIP Code *</label>
+                    <label className="block text-gray-700 dark:text-gray-300 mb-2">PIN Code *</label>
                     <input
                       type="text"
                       name="zipCode"
@@ -327,7 +332,7 @@ const Checkout = () => {
                       {item.name} 
                       <span className="text-gray-500"> x{item.quantity}</span>
                     </span>
-                    <span className="font-semibold dark:text-white">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-semibold dark:text-white">₹{formatPrice(item.price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
@@ -336,20 +341,20 @@ const Checkout = () => {
               <div className="border-t dark:border-gray-700 pt-3 space-y-2">
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? 'Free' : `₹${formatPrice(shipping)}`}</span>
                 </div>
                 <div className="flex justify-between text-gray-600 dark:text-gray-400">
                   <span>Tax (10%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>₹{formatPrice(tax)}</span>
                 </div>
                 <div className="border-t dark:border-gray-700 pt-3 mt-3">
                   <div className="flex justify-between text-2xl font-bold">
                     <span className="dark:text-white">Total</span>
-                    <span className="text-indigo-600 dark:text-indigo-400">${total.toFixed(2)}</span>
+                    <span className="text-indigo-600 dark:text-indigo-400">₹{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>
@@ -358,12 +363,12 @@ const Checkout = () => {
               {shipping > 0 && (
                 <div className="mt-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl p-3">
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Add ${(50 - subtotal).toFixed(2)} more to get free shipping!
+                    Add ₹{formatPrice(5000 - subtotal)} more to get free shipping!
                   </p>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
                     <div 
                       className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all" 
-                      style={{ width: `${Math.min((subtotal / 50) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((subtotal / 5000) * 100, 100)}%` }}
                     />
                   </div>
                 </div>
@@ -382,7 +387,7 @@ const Checkout = () => {
                   </>
                 ) : (
                   <>
-                    <FiCheckCircle /> Place Order • ${total.toFixed(2)}
+                    <FiCheckCircle /> Place Order • ₹{formatPrice(total)}
                   </>
                 )}
               </button>
@@ -390,7 +395,7 @@ const Checkout = () => {
               {/* Security Badges */}
               <div className="mt-4 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                 <span className="flex items-center gap-1"><FiShield /> Secure Payment</span>
-                <span className="flex items-center gap-1"><FiTruck /> Free Shipping on $50+</span>
+                <span className="flex items-center gap-1"><FiTruck /> Free Shipping on ₹5000+</span>
               </div>
               
               <p className="text-center text-xs text-gray-400 mt-3">

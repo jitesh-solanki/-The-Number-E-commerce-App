@@ -9,6 +9,11 @@ const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { addToWishlist, isInWishlist } = useWishlist();
 
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
+
   // Fallback image URL (reliable placeholder service)
   const fallbackImage = 'https://placehold.co/500x500/e2e8f0/1e293b?text=No+Image';
 
@@ -108,9 +113,9 @@ const ProductCard = ({ product }) => {
         )}
         
         <div className="flex items-baseline gap-2 mb-3">
-          <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">${product.price}</span>
+          <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">₹{formatPrice(product.price)}</span>
           {product.originalPrice && (
-            <span className="text-gray-400 line-through text-sm">${product.originalPrice}</span>
+            <span className="text-gray-400 line-through text-sm">₹{formatPrice(product.originalPrice)}</span>
           )}
         </div>
         

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
+import { useSubscription } from '../context/SubscriptionContext';
 import { FiFacebook, FiTwitter, FiInstagram, FiMail, FiPhone, FiMapPin, FiHeart, FiYoutube } from 'react-icons/fi';
 
 const Footer = () => {
   const { settings } = useSettings();
+  const { addSubscriber } = useSubscription();
   const currentYear = new Date().getFullYear();
+  const [subEmail, setSubEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Social links mapping
   const socialLinks = [
@@ -14,6 +18,18 @@ const Footer = () => {
     { name: 'Instagram', icon: FiInstagram, url: settings.socialLinks?.instagram, color: 'hover:text-pink-500' },
     { name: 'YouTube', icon: FiYoutube, url: settings.socialLinks?.youtube, color: 'hover:text-red-600' }
   ];
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!subEmail.trim()) return;
+    
+    setIsSubmitting(true);
+    const success = addSubscriber(subEmail);
+    if (success) {
+      setSubEmail('');
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-black dark:from-gray-950 dark:to-black text-white mt-auto">
@@ -70,6 +86,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/track-order" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300">
+                  Track Order
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="text-gray-400 hover:text-indigo-400 transition-colors duration-300">
                   About Us
                 </Link>
@@ -111,20 +132,27 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Newsletter - Working Subscription */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Stay Updated</h3>
             <p className="text-gray-400 mb-4">Subscribe to get special offers and updates</p>
-            <div className="flex">
+            <form onSubmit={handleSubscribe} className="flex">
               <input
                 type="email"
+                value={subEmail}
+                onChange={(e) => setSubEmail(e.target.value)}
                 placeholder="Your email"
+                required
                 className="flex-1 px-4 py-2 rounded-l-xl bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-indigo-500"
               />
-              <button className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-r-xl hover:from-indigo-600 hover:to-purple-700 transition-all">
-                Subscribe
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-r-xl hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50"
+              >
+                {isSubmitting ? '...' : 'Subscribe'}
               </button>
-            </div>
+            </form>
           </div>
         </div>
 

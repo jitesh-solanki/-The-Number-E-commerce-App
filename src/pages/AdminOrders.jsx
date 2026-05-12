@@ -10,6 +10,11 @@ const AdminOrders = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Format price in Indian Rupees
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN').format(price);
+  };
+
   // Fallback image URL
   const fallbackImage = 'https://placehold.co/100x100/e2e8f0/1e293b?text=No+Image';
 
@@ -29,16 +34,16 @@ const AdminOrders = () => {
           id: 'ORD-1001',
           customerName: 'John Doe',
           customerEmail: 'john@example.com',
-          customerPhone: '+1 (555) 123-4567',
+          customerPhone: '+91 98765 43210',
           shippingAddress: '123 Main St, New York, NY 10001',
           items: [
-            { id: 1, name: 'Wireless Headphones', price: 99.99, quantity: 1, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100' },
-            { id: 2, name: 'Smart Watch', price: 249.99, quantity: 1, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100' }
+            { id: 1, name: 'Wireless Headphones', price: 7999, quantity: 1, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100' },
+            { id: 2, name: 'Smart Watch', price: 19999, quantity: 1, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100' }
           ],
-          subtotal: 349.98,
-          shipping: 5.99,
-          tax: 35.00,
-          total: 390.97,
+          subtotal: 27998,
+          shipping: 500,
+          tax: 2800,
+          total: 31298,
           status: 'Delivered',
           date: '2024-01-15',
           paymentMethod: 'Credit Card'
@@ -47,15 +52,15 @@ const AdminOrders = () => {
           id: 'ORD-1002',
           customerName: 'Jane Smith',
           customerEmail: 'jane@example.com',
-          customerPhone: '+1 (555) 234-5678',
+          customerPhone: '+91 87654 32109',
           shippingAddress: '456 Oak Ave, Los Angeles, CA 90210',
           items: [
-            { id: 3, name: 'Running Shoes', price: 79.99, quantity: 2, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100' }
+            { id: 3, name: 'Running Shoes', price: 6499, quantity: 2, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100' }
           ],
-          subtotal: 159.98,
+          subtotal: 12998,
           shipping: 0,
-          tax: 16.00,
-          total: 175.98,
+          tax: 1300,
+          total: 14298,
           status: 'Processing',
           date: '2024-01-14',
           paymentMethod: 'PayPal'
@@ -64,16 +69,16 @@ const AdminOrders = () => {
           id: 'ORD-1003',
           customerName: 'Mike Johnson',
           customerEmail: 'mike@example.com',
-          customerPhone: '+1 (555) 345-6789',
+          customerPhone: '+91 76543 21098',
           shippingAddress: '789 Pine Rd, Chicago, IL 60601',
           items: [
-            { id: 4, name: 'Backpack', price: 49.99, quantity: 1, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100' },
-            { id: 5, name: 'Sunglasses', price: 159.99, quantity: 1, image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100' }
+            { id: 4, name: 'Backpack', price: 7499, quantity: 1, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100' },
+            { id: 5, name: 'Sunglasses', price: 12999, quantity: 1, image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100' }
           ],
-          subtotal: 209.98,
-          shipping: 5.99,
-          tax: 21.00,
-          total: 236.97,
+          subtotal: 20498,
+          shipping: 500,
+          tax: 2050,
+          total: 23048,
           status: 'Shipped',
           date: '2024-01-14',
           paymentMethod: 'Credit Card'
@@ -82,15 +87,15 @@ const AdminOrders = () => {
           id: 'ORD-1004',
           customerName: 'Sarah Wilson',
           customerEmail: 'sarah@example.com',
-          customerPhone: '+1 (555) 456-7890',
+          customerPhone: '+91 65432 10987',
           shippingAddress: '321 Elm St, Houston, TX 77001',
           items: [
-            { id: 6, name: 'Leather Wallet', price: 29.99, quantity: 1, image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=100' }
+            { id: 6, name: 'Leather Wallet', price: 2999, quantity: 1, image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=100' }
           ],
-          subtotal: 29.99,
-          shipping: 5.99,
-          tax: 3.00,
-          total: 38.98,
+          subtotal: 2999,
+          shipping: 500,
+          tax: 300,
+          total: 3799,
           status: 'Pending',
           date: '2024-01-13',
           paymentMethod: 'Credit Card'
@@ -194,7 +199,7 @@ const AdminOrders = () => {
           <p className="text-xs text-green-600">Delivered</p>
         </div>
         <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-3 text-center">
-          <p className="text-2xl font-bold text-indigo-600">${stats.revenue.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-indigo-600">₹{formatPrice(stats.revenue)}</p>
           <p className="text-xs text-indigo-600">Revenue</p>
         </div>
       </div>
@@ -281,7 +286,7 @@ const AdminOrders = () => {
                 <th className="p-4 dark:text-white">Total</th>
                 <th className="p-4 dark:text-white">Status</th>
                 <th className="p-4 dark:text-white text-center">Actions</th>
-              </tr>
+               </tr>
             </thead>
             <tbody>
               {filteredOrders.map((order, index) => (
@@ -301,7 +306,7 @@ const AdminOrders = () => {
                   </td>
                   <td className="p-4 text-sm dark:text-gray-300">{order.date}</td>
                   <td className="p-4 text-center dark:text-gray-300">{order.items?.length || 0}</td>
-                  <td className="p-4 font-semibold text-indigo-600 dark:text-indigo-400">${order.total.toFixed(2)}</td>
+                  <td className="p-4 font-semibold text-indigo-600 dark:text-indigo-400">₹{formatPrice(order.total)}</td>
                   <td className="p-4">
                     <select
                       value={order.status}
@@ -313,7 +318,7 @@ const AdminOrders = () => {
                       <option value="Shipped">Shipped</option>
                       <option value="Delivered">Delivered</option>
                     </select>
-                   </td>
+                  </td>
                   <td className="p-4 text-center">
                     <button
                       onClick={() => {
@@ -325,7 +330,7 @@ const AdminOrders = () => {
                     >
                       <FiEye />
                     </button>
-                   </td>
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
@@ -421,10 +426,10 @@ const AdminOrders = () => {
                         <div className="flex-1">
                           <p className="font-semibold dark:text-white">{item.name}</p>
                           <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
-                          <p className="text-indigo-600 font-semibold">${item.price} each</p>
+                          <p className="text-indigo-600 font-semibold">₹{formatPrice(item.price)} each</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold dark:text-white">${(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="font-bold dark:text-white">₹{formatPrice(item.price * item.quantity)}</p>
                         </div>
                       </div>
                     ))}
@@ -435,19 +440,19 @@ const AdminOrders = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Subtotal</span>
-                        <span className="dark:text-white">${selectedOrder.subtotal?.toFixed(2) || (selectedOrder.total - 5.99 - selectedOrder.total * 0.1).toFixed(2)}</span>
+                        <span className="dark:text-white">₹{formatPrice(selectedOrder.subtotal || (selectedOrder.total - 500 - selectedOrder.total * 0.1))}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Shipping</span>
-                        <span className="dark:text-white">${selectedOrder.shipping?.toFixed(2) || '5.99'}</span>
+                        <span className="dark:text-white">{selectedOrder.shipping === 0 ? 'Free' : `₹${formatPrice(selectedOrder.shipping || 500)}`}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Tax</span>
-                        <span className="dark:text-white">${selectedOrder.tax?.toFixed(2) || (selectedOrder.total * 0.1).toFixed(2)}</span>
+                        <span className="text-gray-500">Tax (10%)</span>
+                        <span className="dark:text-white">₹{formatPrice(selectedOrder.tax || (selectedOrder.total * 0.1))}</span>
                       </div>
                       <div className="flex justify-between text-lg font-bold pt-2 border-t dark:border-gray-700">
                         <span className="dark:text-white">Total</span>
-                        <span className="text-indigo-600">${selectedOrder.total.toFixed(2)}</span>
+                        <span className="text-indigo-600">₹{formatPrice(selectedOrder.total)}</span>
                       </div>
                     </div>
                   </div>
