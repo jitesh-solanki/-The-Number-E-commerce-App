@@ -97,7 +97,7 @@ const Navbar = () => {
 
             {/* Icons */}
             <div className="flex items-center space-x-4">
-              {/* Theme Toggle Button */}
+              {/* Theme Toggle Button - Only in navbar */}
               <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300"
@@ -209,7 +209,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile menu */}
+          {/* Mobile menu - REMOVED duplicate dark mode toggle */}
           {isMobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
               <form onSubmit={handleSearch} className="mb-4">
@@ -227,14 +227,7 @@ const Navbar = () => {
                 </div>
               </form>
               
-              {/* Theme toggle in mobile menu */}
-              <button
-                onClick={toggleDarkMode}
-                className="w-full py-2 text-gray-700 dark:text-gray-300 hover:text-indigo-600 transition-colors flex items-center gap-2"
-              >
-                {darkMode ? <FiSun /> : <FiMoon />}
-                {darkMode ? 'Light Mode' : 'Dark Mode'}
-              </button>
+              {/* Dark mode toggle REMOVED from mobile menu - only in navbar now */}
               
               <Link
                 to="/"
