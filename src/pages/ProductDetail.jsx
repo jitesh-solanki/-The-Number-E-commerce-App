@@ -11,6 +11,7 @@ import ProductReviews from '../components/ProductReviews';
 import ProductQnA from '../components/ProductQnA';
 import { FiHeart, FiShoppingCart, FiStar, FiTruck, FiRefreshCw, FiShield, FiShare2, FiMinus, FiPlus } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { trackProductView } from '../utils/analytics';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -44,12 +45,13 @@ const ProductDetail = () => {
     return () => clearTimeout(timer);
   }, [id]);
 
-  // Add to recently viewed when product loads - FIXED: removed addToRecentlyViewed from dependencies
+  // Add to recently viewed when product loads
   useEffect(() => {
     if (product) {
       addToRecentlyViewed(product);
+      trackProductView(product); // Track product view in analytics
     }
-  }, [product]); // <-- FIXED: removed addToRecentlyViewed from dependencies
+  }, [product]);
 
   const handleShare = async () => {
     if (!product) return;
@@ -359,7 +361,7 @@ const ProductDetail = () => {
           <ProductReviews productId={product.id} productName={product.name} />
         </div>
 
-        {/* Q&A Section - ADDED HERE */}
+        {/* Q&A Section */}
         <div className="mt-8">
           <ProductQnA productId={product.id} productName={product.name} />
         </div>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { trackAddToCart, trackRemoveFromCart } from '../utils/analytics';
 
 const CartContext = createContext();
 
@@ -27,6 +28,7 @@ export const CartProvider = ({ children }) => {
       
       if (existingItem) {
         toast.success(`Added another ${product.name} to cart`);
+        trackAddToCart(product, quantity);
         return prevItems.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + quantity }
@@ -35,11 +37,16 @@ export const CartProvider = ({ children }) => {
       }
       
       toast.success(`${product.name} added to cart`);
+      trackAddToCart(product, quantity);
       return [...prevItems, { ...product, quantity }];
     });
   };
 
   const removeFromCart = (productId) => {
+    const product = cartItems.find(item => item.id === productId);
+    if (product) {
+      trackRemoveFromCart(product, product.quantity);
+    }
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
     toast.success('Item removed from cart');
   };

@@ -7,6 +7,7 @@ import FilterSidebar from '../components/FilterSidebar';
 import { useStore } from '../context/StoreContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { FiGrid, FiList, FiFilter } from 'react-icons/fi';
+import { trackSearch } from '../utils/analytics';
 
 const Shop = () => {
   const { products, selectedCategory, setSelectedCategory, searchQuery, setSearchQuery, loading } = useStore();
@@ -50,6 +51,18 @@ const Shop = () => {
       searchQuery: searchQuery || ''
     });
   }, [selectedCategory]);
+
+  // Track search when search query changes
+  useEffect(() => {
+    if (searchQuery) {
+      // Debounce search tracking to avoid too many events
+      const timer = setTimeout(() => {
+        const resultsCount = filteredProducts.length;
+        trackSearch(searchQuery, resultsCount);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [searchQuery]);
 
   // Filter products based on all criteria
   let filteredProducts = products.filter(product => {
@@ -224,7 +237,7 @@ const Shop = () => {
                 )}
                 {filters.maxPrice < 1000 && (
                   <span className="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm flex items-center gap-1">
-                    Up to ${filters.maxPrice}
+                    Up to ₹{filters.maxPrice}
                     <button onClick={() => setFilters({...filters, maxPrice: 1000})} className="hover:text-red-500">×</button>
                   </span>
                 )}

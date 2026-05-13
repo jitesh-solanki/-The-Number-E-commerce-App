@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { FiArrowLeft, FiTruck, FiShield, FiCreditCard, FiMapPin, FiPhone, FiMail, FiUser, FiCheckCircle } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { trackBeginCheckout, trackPurchase } from '../utils/analytics';
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -45,6 +46,13 @@ const Checkout = () => {
       navigate('/cart');
     }
   }, [cartItems, navigate]);
+
+  // Track begin checkout when cart items change
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      trackBeginCheckout(cartItems, getCartTotal());
+    }
+  }, [cartItems]);
 
   // Format price in Indian Rupees
   const formatPrice = (price) => {
@@ -103,6 +111,9 @@ const Checkout = () => {
       let orders = savedOrders ? JSON.parse(savedOrders) : [];
       orders.unshift(order); // Add new order at the beginning
       localStorage.setItem('shopOrders', JSON.stringify(orders));
+
+      // Track purchase in analytics
+      trackPurchase(order);
 
       // Clear cart
       clearCart();

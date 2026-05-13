@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { trackAddToWishlist, trackRemoveFromWishlist } from '../utils/analytics';
 
 const WishlistContext = createContext();
 
@@ -29,11 +30,16 @@ export const WishlistProvider = ({ children }) => {
         return prevItems;
       }
       toast.success(`${product.name} added to wishlist`);
+      trackAddToWishlist(product);
       return [...prevItems, product];
     });
   };
 
   const removeFromWishlist = (productId) => {
+    const product = wishlistItems.find(item => item.id === productId);
+    if (product) {
+      trackRemoveFromWishlist(product);
+    }
     setWishlistItems(prevItems => prevItems.filter(item => item.id !== productId));
     toast.success('Item removed from wishlist');
   };
