@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
@@ -20,6 +20,9 @@ import RecentlyViewed from './components/RecentlyViewed';
 import AdminRoute from './components/AdminRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
+
+// Google Analytics
+const GA_MEASUREMENT_ID = 'G-0VP874DZV5';
 
 // Lazy load pages for better performance - code splitting
 const Home = lazy(() => import('./pages/Home'));
@@ -44,12 +47,31 @@ const AdminUsers = lazy(() => import('./pages/AdminUsers'));
 const AdminSettings = lazy(() => import('./pages/AdminSettings'));
 const AdminSubscribers = lazy(() => import('./pages/AdminSubscribers'));
 
+// Analytics component to track page views
+const Analytics = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Track page view with Google Analytics
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', GA_MEASUREMENT_ID, {
+        page_path: location.pathname + location.search,
+      });
+    }
+    // Also log to console for debugging
+    console.log(`Page viewed: ${location.pathname}`);
+  }, [location]);
+
+  return null;
+};
+
 // This component has access to theme because it's inside ThemeProvider
 const AppContent = () => {
   const { darkMode } = useTheme();
   
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+      <Analytics />
       <Navbar />
       <main className="flex-grow">
         <Breadcrumbs />
