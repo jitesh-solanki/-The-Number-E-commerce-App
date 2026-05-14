@@ -11,6 +11,21 @@ export const useAuth = () => {
   return context;
 };
 
+// Helper function to decode JWT token from Google
+const parseJwt = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error parsing JWT:', error);
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,6 +89,37 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  // Google Login
+  const googleLogin = async (credentialResponse) => {
+    try {
+      const decodedToken = parseJwt(credentialResponse.credential);
+      
+      if (!decodedToken) {
+        toast.error('Google login failed');
+        return false;
+      }
+      
+      const userData = {
+        name: decodedToken.name,
+        email: decodedToken.email,
+        picture: decodedToken.picture,
+        role: 'customer',
+        provider: 'google',
+        id: decodedToken.sub
+      };
+      
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      setIsAuthenticated(true);
+      toast.success(`Welcome ${userData.name}!`);
+      return true;
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error('Google login failed. Please try again.');
+      return false;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('adminUser');
     localStorage.removeItem('adminToken');
@@ -112,6 +158,7 @@ export const AuthProvider = ({ children }) => {
       isAuthenticated,
       isAdmin,
       login,
+      googleLogin,
       logout,
       loading,
       changePassword

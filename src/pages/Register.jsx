@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { FiMail, FiLock, FiUser, FiUserPlus, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -10,6 +12,8 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const { googleLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -38,6 +42,19 @@ const Register = () => {
       navigate('/');
       setIsLoading(false);
     }, 1000);
+  };
+
+  const handleGoogleSuccess = async (response) => {
+    setIsGoogleLoading(true);
+    const success = await googleLogin(response);
+    setIsGoogleLoading(false);
+    if (success) {
+      navigate('/');
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google sign up failed. Please try again.');
   };
 
   return (
@@ -142,6 +159,22 @@ const Register = () => {
             <FiCheck /> {isLoading ? 'Creating account...' : 'Register'}
           </motion.button>
         </form>
+
+        {/* Divider */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Google Sign Up Button */}
+        <GoogleLoginButton 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+        />
 
         <div className="mt-6 text-center">
           <p className="text-gray-600 dark:text-gray-400">
